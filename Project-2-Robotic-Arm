@@ -1,2 +1,0 @@
-Robotics engineering,Colombia hardware builder with a real physical 3-DOF robotic arm controlled via Arduino
-Problem: Derive the complete Jacobian matrix and geometric models for a real 3-joint robotic arm (2 rotoid joints + 1 prismatic joint, arm lengths d1=215mm, d2=163.56mm), and build a working Simulink simulation of all 3 servo motors with PWM signal control and degree plotting.

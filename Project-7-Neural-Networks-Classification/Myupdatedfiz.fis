@@ -1,0 +1,56 @@
+[System]
+Name='Myupdatedfiz'
+Type='mamdani'
+Version=2.0
+NumInputs=4
+NumOutputs=1
+NumRules=2
+AndMethod='min'
+OrMethod='max'
+ImpMethod='min'
+AggMethod='max'
+DefuzzMethod='centroid'
+
+[Input1]
+Name='Capacity'
+Range=[0 10]
+NumMFs=3
+MF1='Medium':'trapmf',[-2.844 -0.6886 0.6886 2.844]
+MF2='High':'trapmf',[7.156 9.311 10.69 12.84]
+MF3='Medium':'trapmf',[2.82 4.5 5.5 7.16684723726977]
+
+[Input2]
+Name='Propability_Off'
+Range=[0 10]
+NumMFs=3
+MF1='Low':'trapmf',[0 0 1 3]
+MF2='High':'trapmf',[7 8 10 10]
+MF3='Medium':'trapmf',[2.97 4.40411700975081 5.5 7.04]
+
+[Input3]
+Name='Interference_ratio'
+Range=[0 10]
+NumMFs=3
+MF1='Low':'trapmf',[0 0 1 3]
+MF2='High':'trapmf',[7 8 10 10]
+MF3='Medium':'trapmf',[3.03 4.5 5.5 7.03683640303359]
+
+[Input4]
+Name='SNR'
+Range=[0 10]
+NumMFs=3
+MF1='Low':'trapmf',[0 0 1 3]
+MF2='High':'trapmf',[7 8 10 10]
+MF3='Medium':'trapmf',[2.96316359696641 4.5 5.5 7]
+
+[Output1]
+Name='Output'
+Range=[0 30]
+NumMFs=3
+MF1='Low':'trimf',[0 5 10]
+MF2='High':'trimf',[20 25 30]
+MF3='Medium':'trimf',[10 15 20]
+
+[Rules]
+2 2 1 2, 2 (1) : 1
+1 1 2 1, 1 (1) : 1

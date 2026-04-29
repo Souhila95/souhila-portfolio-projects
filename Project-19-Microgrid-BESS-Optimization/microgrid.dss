@@ -1,0 +1,58 @@
+Clear
+Set DefaultBaseFrequency=50
+
+! Define Circuit
+New Circuit.microgrid baseKV=11 pu=1.0 MVAsc3=100 MVAsc1=10
+
+! Define Transformer
+New Transformer.XFM1 Phases=3 Windings=2 Xhl=4.07
+~ wdg=1 Bus=sourcebus conn=Delta kv=11 kva=250 %r=0.37
+~ wdg=2 Bus=PCCbus conn=wye kv=0.4 kva=250 %r=0.37
+
+! Define Line Code
+New Linecode.MyLine nPhases=3 R1=0.01 X1=0.02 C1=0 normAmps=200
+
+! Define Lines
+New Line.PCCtoExchange Bus1=PCCbus Bus2=ExchangeBus phases=3 linecode=MyLine length=0.1 units=km
+New Line.ExchangetoMain Bus1=ExchangeBus Bus2=MainBus phases=3 linecode=MyLine length=0.1 units=km
+New Line.MaintoLoad Bus1=MainBus Bus2=LoadBus phases=3 linecode=MyLine length=0.1 units=km
+
+! Define Curves and Shapes
+New XYCurve.Eff npts=4 xarray=[.1 .2 .4 1.0] yarray=[1 1 1 1]
+New XYCurve.FatorPvsT npts=4 xarray=[0 25 75 100] yarray=[1 1 1 1]
+New LoadShape.MyShape npts=24 interval=1 mult=[0 0 0 0 0 0.1 0.2 0.3 0.5 0.8 0.9 1.0 1.0 0.99 0.9 0.7 0.4 0.1 0 0 0 0 0]
+New TShape.tcurve npts=24 interval=1 temp=[21.99 20.00 19.44 19.44 18.89 18.89 18.33 18.33 19.44 21.11 23.33 27 27 26.11 26.67 26.67 26.11 25.56 25.00 22.78 21.67 20.56 20.00 20.00 19.44]
+
+! Define PV System (Increase Pmpp to simulate a larger PV system)
+New PVSystem.PV phases=3 bus1=ExchangeBus kV=0.4 irrad=0.6 temperature=25 pmpp=300 kva=300 PF=0.95 effcurve=Eff P-tCurve=FatorPvsT Daily=MyShape
+
+! Define LoadShape for Load
+New LoadShape.loadcurve npts=24 interval=1 mult=[0.75 0.6 0.65 0.7 0.73 0.9 1.35 0.63 0.55 0.85 0.8 0.83 0.75 0.7 0.9 0.8 1.05 1.3 1.5 1.85 1 1.6 1.65 1.25]
+
+! Define Load
+New Load.ConventionalLoad Bus1=LoadBus phases=3 kV=0.4 kW=100 pf=0.98 daily=loadcurve
+
+! Set and Calculate Voltage Bases
+Set VoltageBases=[11 0.4]
+CalcVoltageBases
+
+! Add Monitors to Track PV Output and Power Flow
+New Monitor.mon element=PVSystem.PV terminal=1 mode=1
+New Monitor.GridToMicrogrid element=Line.PCCtoExchange terminal=1 mode=1
+New Monitor.vol element=line.ExchangetoMain terminal=1 mode=0
+
+! Simulation Settings
+Set mode=daily
+Set stepsize=1h
+Set number=24
+Solve
+
+! Export Monitors Data
+Export monitor mon
+Export monitor GridToMicrogrid
+Export monitor vol
+
+! Plot the results
+plot monitor object=GridToMicrogrid
+plot monitor object=mon
+plot monitor object=vol

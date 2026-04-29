@@ -1,0 +1,136 @@
+!Load Codes
+
+!New LoadShape.loadcurve npts=24 interval=1 mult=[0.75 0.6 0.65 0.7 0.73 0.9 1.35 0.63 0.55 0.85 0.8 0.83 0.75 0.7 0.9 0.8 1.05 1.3 1.5 1.85 1 1.6 1.65 1.25]
+New LoadShape.loadcurve npts=24 interval=1 mult=[0.75 0.6 0.65 0.7 0.73 0.9 0.8 0.63 0.55 0.85 0.8 0.83 0.75 0.7 0.9 0.8 1.05 1.3 1.2 1.2 1 1.2 1.1 1.25]
+// single phase loads connect to terminal 4 which is the neutral. The rated votlage is 230V. kv=0.23
+// bus SP64280
+
+New Load.S1    Bus1=SP64280-C.3.0   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S2    Bus1=SP64280-C.3.0   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S3    Bus1=SP64280-C.2.0   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S4    Bus1=SP64280-C.1.0   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+
+// bus P100775-B
+ 
+New Load.S5    Bus1=P100775-B.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+
+
+// bus P101136-B
+
+New Load.S6    Bus1=P101136-B.3.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S7    Bus1=P101136-B.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S8    Bus1=P101136-B.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+
+// bus P101137-A
+
+New Load.S9    Bus1=P101137-A.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S10   Bus1=P101137-A.3.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S11   Bus1=P101137-A.3.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+
+// bus P101138-B
+
+New Load.S12    Bus1=P101138-B.3.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+
+// bus P75716-A
+
+New Load.S13    Bus1=P75716-A.3.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S14    Bus1=P75716-A.3.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S15    Bus1=P75716-A.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+
+// bus P75717-A
+
+New Load.S16    Bus1=P75717-A.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S17    Bus1=P75717-A.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S18    Bus1=P75717-A.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S19    Bus1=P75717-A.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+
+// bus P75718-A
+
+New Load.S20    Bus1=P75718-A.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S21    Bus1=P75718-A.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S22    Bus1=P75718-A.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S23    Bus1=P75718-A.3.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+
+// bus P75719
+
+New Load.S24    Bus1=P75719.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S25    Bus1=P75719.3.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+
+// bus P70784-C
+
+New Load.S26    Bus1=P70784-C.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S27    Bus1=P70784-C.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S28    Bus1=P70784-C.3.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S29    Bus1=P70784-C.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S30    Bus1=P70784-C.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S31    Bus1=P70784-C.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+
+// bus P70783-B
+
+New Load.S32    Bus1=P70783-B.3.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S33    Bus1=P70783-B.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S34    Bus1=P70783-B.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S35    Bus1=P70783-B.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+
+// bus P70782-B
+
+New Load.S36    Bus1=P70782-B.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S37    Bus1=P70782-B.3.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S38    Bus1=P70782-B.3.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S39    Bus1=P70782-B.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+
+// bus P70781-B
+
+New Load.S40    Bus1=P70781-B.3.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+
+// bus P64279-C
+
+New Load.S41    Bus1=P64279-C.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+
+// bus X11277-E
+
+New Load.S42    Bus1=X11277-E.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S43    Bus1=X11277-E.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S44    Bus1=X11277-E.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+
+// bus P64282-C
+
+New Load.S45    Bus1=P64282-C.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S46    Bus1=P64282-C.3.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S47    Bus1=P64282-C.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S48    Bus1=P64282-C.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+
+// bus P64283-C
+
+New Load.S49    Bus1=P64283-C.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S50    Bus1=P64283-C.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S51    Bus1=P64283-C.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S52    Bus1=P64283-C.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+
+// bus P64284-C
+
+New Load.S53    Bus1=P64284-C.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S54    Bus1=P64284-C.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S55    Bus1=P64284-C.3.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S56    Bus1=P64284-C.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S57    Bus1=P64284-C.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+
+// bus P64285-B
+
+New Load.S58    Bus1=P64285-B.3.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S59    Bus1=P64285-B.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S60    Bus1=P64285-B.3.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S61    Bus1=P64285-B.1.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+
+// bus P64286-C
+
+New Load.S62    Bus1=P64286-C.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+New Load.S63    Bus1=P64286-C.2.4   Phases=1 Conn=Wye   Model=1 kV=0.23   kW=2.11 pf=0.95 daily=loadcurve
+
+
+
+
+
+
+
+

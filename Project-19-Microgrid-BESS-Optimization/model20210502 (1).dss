@@ -1,0 +1,96 @@
+Clear
+Set DefaultBaseFrequency=50
+
+! Source definition
+
+New object=circuit.KLG4A
+~ basekv=11 pu=1.0 MVAsc3=100 MVAsc1=10
+
+
+
+! Load Transformer
+
+New Transformer.XFM1  Phases=3 Windings=2 Xhl=4.07
+~ wdg=1 Bus=sourcebus       conn=Delta kv=11  kva=100 %r=0.37
+~ wdg=2 Bus=SP64280-C.1.2.3.0    conn=wye kv=0.40632  kva=100 %r=0.37
+
+
+!Conductor Codes
+
+New linecode.moon nphases=4 BaseFreq=50 units=km !Moon Conductors Western Power Cross Arm 8.8m line height
+~ rmatrix="0.285988020 0.049348020 0.049348020 0.049348020 |0.049348020 0.285988020 0.049348020 0.049348020 |0.049348020 0.049348020 0.285988020 0.049348020 |0.049348020 0.049348020 0.049348020 0.285988020 |"
+~ xmatrix="0.755694837 0.468852939 0.406859682 0.386950235 |0.468852939 0.755694837 0.436172333 0.406859682 |0.406859682 0.436172333 0.755694837 0.468852939 |0.386950235 0.406859682 0.468852939 0.755694837 |"
+~ cmatrix="9.315 -3.371 -1.279 -0.964 |-3.371 9.841 -2.093 -1.279 |-1.279 -2.093 9.841 -3.371 |-0.964 -1.279 -3.371 9.315 |"
+
+
+!Line Codes
+
+New Line.21049386   Phases=4 Bus1=SP64280-C.1.2.3.0  Bus2=P100775-B.1.2.3.4 LineCode=moon  Length=24.6 units=m
+New Line.21049417   Phases=4 Bus1=P75718-A.1.2.3.4   Bus2=P75719.1.2.3.4    LineCode=moon  Length=36.6 units=m
+New Line.21049415   Phases=4 Bus1=P75716-A.1.2.3.4   Bus2=P75717-A.1.2.3.4  LineCode=moon  Length=23.5 units=m
+New Line.21049412   Phases=4 Bus1=P101136-B.1.2.3.4  Bus2=P101137-A.1.2.3.4 LineCode=moon  Length=32.4 units=m
+New Line.201868     Phases=4 Bus1=P64283-C.1.2.3.4   Bus2=P64284-C.1.2.3.4  LineCode=moon  Length=35.7 units=m
+New Line.21049390   Phases=4 Bus1=P101135-B.1.2.3.4  Bus2=P70784-C.1.2.3.4  LineCode=moon  Length=49.4 units=m
+New Line.21049388   Phases=4 Bus1=P100775-B.1.2.3.4  Bus2=P101135-B.1.2.3.4 LineCode=moon  Length=12.9 units=m
+New Line.21049416   Phases=4 Bus1=P75717-A.1.2.3.4   Bus2=P75718-A.1.2.3.4  LineCode=moon  Length=40.5 units=m
+New Line.21049413   Phases=4 Bus1=P101137-A.1.2.3.4  Bus2=P101138-B.1.2.3.4 LineCode=moon  Length=10.1 units=m
+New Line.201870     Phases=4 Bus1=P64285-B.1.2.3.4   Bus2=P64286-C.1.2.3.4  LineCode=moon  Length=35.8 units=m
+New Line.201867     Phases=4 Bus1=P64282-C.1.2.3.4   Bus2=P64283-C.1.2.3.4  LineCode=moon  Length=35.9 units=m
+New Line.201866     Phases=4 Bus1=X11277-E.1.2.3.4   Bus2=P64282-C.1.2.3.4  LineCode=moon  Length=30.1 units=m
+New Line.21049395   Phases=4 Bus1=P70783-B.1.2.3.4   Bus2=P70782-B.1.2.3.4  LineCode=moon  Length=36.8 units=m
+New Line.21049411   Phases=4 Bus1=P100775-B.1.2.3.4  Bus2=P101136-B.1.2.3.4 LineCode=moon  Length=59.4 units=m
+New Line.201869     Phases=4 Bus1=P64284-C.1.2.3.4   Bus2=P64285-B.1.2.3.4  LineCode=moon  Length=48.1 units=m
+New Line.21049384   Phases=4 Bus1=P64279-C.1.2.3.4   Bus2=SP64280-C.1.2.3.0 LineCode=moon  Length=45.5 units=m
+New Line.21049393   Phases=4 Bus1=P70784-C.1.2.3.4   Bus2=P70783-B.1.2.3.4  LineCode=moon  Length=42.0 units=m
+New Line.21049487   Phases=4 Bus1=P70781-B.1.2.3.4   Bus2=P70782-B.1.2.3.4  LineCode=moon  Length=36.2 units=m
+New Line.21049414   Phases=4 Bus1=P101138-B.1.2.3.4  Bus2=P75716-A.1.2.3.4  LineCode=moon  Length=34.0 units=m
+New Line.201865     Phases=4 Bus1=P64279-C.1.2.3.4   Bus2=X11277-E.1.2.3.4  LineCode=moon  Length=15.7 units=m
+
+Redirect LoadShapes.txt
+Redirect Loads.txt
+
+New energymeter.meter element=Transformer.XFM1 terminal=1
+
+
+
+
+
+
+
+
+
+
+
+!New XYCurve.FatorPvsT npts=4 xarray=[0 25 75 100] yarray=[1.2 1.0 .8 .6]
+!New XYCurve.Eff npts=4 xarray=[.1 .2 .4 1.0] yarray=[.86 .9 .93 .97]
+!New loadshape.IRR npts=24 interval=1 mult=(file=C:\Users\mumtahiu\Downloads\Battery\load\PVLoad.txt)
+!New Tshape.tempCurve npts=24 interval=1 temp=(file=C:\Users\mumtahiu\Downloads\Battery\load\PVtemp.txt)
+
+!Redirect PVsystem.txt
+
+
+
+Set VoltageBases = "11,0.406,0.23"
+CalcVoltageBases
+
+! This command solves the base case power flow
+
+set mode = daily
+set stepsize = 1h
+set number = 24
+
+
+Set maxcontroli=100
+
+Solve
+
+
+
+
+!show current
+
+!show voltage
+
+
+
+

@@ -1,0 +1,292 @@
+
+
+% Define parameters
+% N = 30;             % Total number of SNs
+M = 25;             % Total number of UAVs
+T = 25;             % Number of time steps
+K = 5;              % Number of possible movement actions for each UAV
+delta_x = 1;        % Discretization step for X coordinate
+delta_y = 1;        % Discretization step for Y coordinate
+% Initialize bij as an empty symbolic variable
+bij = sdpvar(N, M, 'full');
+si = binvar(N, 1, 'full'); 
+
+
+% Initialize parameters
+geo_area = 100;     % Area size
+
+% Initialize Ei, VOIi, si 
+Si = [1, 0, 1, 0, 1];         % Binary variable indicating sensor activation
+
+% Define binary decision variables for at least one association with each UAV
+uj = binvar(M, 1, 'full');
+
+% Define binary decision variables for UAV movement actions
+x = binvar(T, M, K, 'full');
+
+% Define continuous decision variables for UAV locations
+X = sdpvar(T+1, M);
+Y = sdpvar(T+1, M);
+
+
+%%%%%%
+% Define constraints
+constraints = [];
+
+%%%%%%%
+% Define constraints for movement actions
+for t = 1:T
+    for j = 1:M
+        % Ensure at least one movement action is selected at each time step
+        constraints = [constraints, sum(x(t, j, :)) >= 1];
+    end
+
+    % Right movement (steps 1 to 5)
+    for step = 1:5
+        if t + step < T + 1
+            constraints = [constraints, X(t + step, j) == X(t + step - 1, j) + delta_x * x(t + step - 1, j, 4)]; % Move right
+            constraints = [constraints, X(t + step, j) <= 100]; % Ensure within grid size
+        end
+    end
+
+    % Left movement (steps 1 to 5)
+    for step = 1:5
+        if t + step < T + 1
+            constraints = [constraints, X(t + step, j) == X(t + step - 1, j) - delta_x * x(t + step - 1, j, 3)]; % Move left
+            constraints = [constraints, X(t + step, j) >= 0]; % Ensure within grid size
+        end
+    end
+
+    % Upward movement (steps 1 to 5)
+    for step = 1:5
+        if t + step < T + 1
+            constraints = [constraints, Y(t + step, j) == Y(t + step - 1, j) + delta_y * x(t + step - 1, j, 1)]; % Move up
+            constraints = [constraints, Y(t + step, j) <= 100]; % Ensure within grid size
+        end
+    end
+
+    % Downward movement (steps 1 to 5)
+    for step = 1:5
+        if t + step < T + 1
+            constraints = [constraints, Y(t + step, j) == Y(t + step - 1, j) - delta_y * x(t + step - 1, j, 2)]; % Move down
+            constraints = [constraints, Y(t + step, j) >= 0]; % Ensure within grid size
+        end
+    end
+end
+
+%%%%%%%%%%%%%end
+Dmax=20;
+% Constraint: bij is 1 and si is 1 when dij is within Dmax and within time deadline (0.5s)
+for i = 1:N
+    for j = 1:M
+        % Condition for dij within Dmax
+        constraints = [constraints, si(i) * dij(i, j) <= Dmax];
+        % Condition for time deadline (0.5s)
+        constraints = [constraints, si(i) * dij(i, j) <= 0.5];
+        % Ensuring bij and si relationship
+        constraints = [constraints, bij(i, j) <= si(i)];
+    end
+end
+
+
+%%%%%%%%%%%%%%%% the objective function %%%%%%%%%%%%%%%%
+% Define constraints for the objective function
+% Define constraints for the objective function
+for i = 1:N
+    constraints = [constraints, sum(bij(i, :)) == si(i)];
+end
+
+for j = 1:M
+    constraints = [constraints, sum(bij(:, j)) >= uj(j)];
+end
+
+% Define objective function weights
+w1 = 0.79; % Weight for minimizing the number of deployed UAVs
+w2 = 0.01; % Weight for minimizing the energy of active SNs
+w3 = 0.01; % Weight for maximizing the number of active SNs
+w4 = 0.01; % Weight for maximizing the VOI of active SNs
+
+% Define the objective function
+Reward = -w1 * sum(uj) + w2 * sum(si) - w3 * sum(Ei) + w4 * sum(VoIi);
+% Constraint 2: Ensure energy summation considered in the reward function
+
+% Define binary decision variable for sensor activation
+% N is the total number of sensors
+% Define binary decision variable for sensor activation
+Ii = binvar(N, 1, 'full');
+  % Hypothetical value for indicator variable for sensor i
+
+
+% Define binary decision variables bij (sensor i associated with UAV j) and si (sensor i active)
+% bij = binvar(N, M, 'full');
+% si = binvar(N, 1, 'full');
+
+constraints = [];
+
+% constraint 2
+% Add constraint ensuring summation of Ei is considered in the reward function for si = 1 when bij = 1
+Eij = SN_transmitPower * Tij(i, j);
+
+Ii=1;
+for i = 1:N
+    constraints = [constraints, sum(Eij .* bij(i, :) .* Ii) <= si(i)];
+end
+
+
+% Constraint 3: Ensure VOI summation for each UAV considered in the reward function
+
+for j = 1:M
+    constraints = [constraints, sum(VoIi' .* bij(:, j)) == uj(j)];
+end
+
+
+% Constraint 4: Set UAV online if associated with at least one SN
+
+for i = 1:N
+    % Calculate VOI for sensor i
+    VOI(i) =  exp(- T);
+end
+
+
+% Add constraint to ensure TotalVOI is within a certain threshold
+threshold = 25; % Adjust the threshold as needed
+constraints = [constraints, VOI <= threshold];
+
+% Constraint 5: Set SN binary variable to 1 if SN has value to send to a UAV
+for i = 1:N
+    for j = 1:M
+        constraints = [constraints, si(i) >= VoIi * bij(i, j)];
+    end
+end
+
+% Constraint 6:
+% Define decision variables
+bij = optimvar('bij', N, M, 'Type', 'integer', 'LowerBound', 0, 'UpperBound', 1);
+Ii = optimvar('Ii', N, 1, 'Type', 'integer', 'LowerBound', 0, 'UpperBound', 1);
+
+constraints = [];
+
+% Constraint: sum of bij from j=1 to M <= Ii for all i
+for i = 1:N
+    constraints = [constraints, sum(bij(i, :)) <= Ii(i)];
+end
+
+% Constraint 7: Ensure SN is considered successfully transmitted to UAV within delay requirement T
+
+
+
+% Define decision variables using YALMIP
+bij = binvar(N, M, 'full');
+si = binvar(N, 1, 'full');
+
+constraints = [];
+
+% Constraint: sum of bij from j=1 to M = si for all i
+for i = 1:N
+    constraints = [constraints, sum(bij(i, :)) == si(i)];
+end
+
+% Add constraints 8 and 9 ensuring UAV locations are within hazardous area
+for j = 1:M
+    constraints = [constraints, 0 <= X(j) <= delta_x];
+    constraints = [constraints, 0 <= Y(j) <= delta_y];
+end
+%constraints 10 and 11
+V=100000; 
+ % Constraint 10: Ensure si >= (T - Tij) / V
+% Constraint 10: Ensure si >= (T - Tij) / V
+for i = 1:N
+    for j = 1:M
+        constraints = [constraints, si(i) >= (T - Tij(i, j)) / V];
+    end
+end
+% 
+% % Constraint 11: Ensure si <= 1 + ((T - Tij) / V)
+% for i = 1:N
+%     for j = 1:M
+%         constraints = [constraints, si(i) <= 1 + ((T - Tij(i, j)) / V)];
+%     end
+% end
+% Constraint 12: Ensure binary variable si is between 0 and 1
+
+Dmax = 20;  %UAVrange
+
+
+% Constraint 12: Ensure si * dij <= Dmax
+for i = 1:N
+    for j = 1:M
+        constraints = [constraints, si(i) * dij(i, j) <= Dmax];
+    end
+end
+
+%%%%%% opt
+
+% % Add the section to modify solver settings
+% ops = sdpsettings('solver', 'intlinprog');
+% ops.intlinprog.Display = 'iter'; % Set display option to show iterative output
+% ops.intlinprog.MaxTime = 360; % Set maximum solve time to 3600 seconds
+% ops.intlinprog.MaxNodes = 100; % Set maximum number of branch-and-bound tree nodes to 10000
+% 
+% % Add requires directive for the Model-Based Calibration Toolbox
+% % It indicates the dependency on the toolbox
+% %requires Model-Based Calibration Toolbox;
+% 
+% % Call the solver with the specified options
+% optimize(constraints, Reward, ops);
+% 
+% % Retrieve optimal values (omitted for brevity)
+
+% Display optimization outcomes (omitted for brevity)
+ops = sdpsettings('solver', 'intlinprog');
+%%%%%%%
+optimize(constraints, Reward, ops);
+
+% Retrieve optimal values
+optimal_UAVs = value(uj);
+optimal_associations = value(bij);
+optimal_locations_X = value(X);
+optimal_locations_Y = value(Y);
+
+
+% Display optimization outcomes
+disp('Optimal number of deployed UAVs:');
+disp(sum(optimal_UAVs));
+% disp('Optimal associations between sensors and UAVs:');
+% disp(optimal_associations);
+% disp('Optimal locations of UAVs (X coordinates):');
+% disp(optimal_locations_X);
+% disp('Optimal locations of UAVs (Y coordinates):');
+
+% disp(optimal_locations_Y);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
